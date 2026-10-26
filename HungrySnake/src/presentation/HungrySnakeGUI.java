@@ -1,11 +1,10 @@
 package presentation;
+import java.awt.Dimension;
 import java.awt.Toolkit;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
+
 import javax.swing.*;
 import java.awt.event.*;
 import java.io.File;
-import javax.swing.JFileChooser;
 
 /**
  * Represents a HungrySnakeGUI
@@ -13,6 +12,8 @@ import javax.swing.JFileChooser;
  */
 
 public class HungrySnakeGUI extends JFrame{
+    private static final Dimension PREFERRED_DIMENSION = new Dimension (Toolkit.getDefaultToolkit().getScreenSize().width/3, Toolkit.getDefaultToolkit().getScreenSize().height/2);
+
     private JMenuItem nuevo;
     private JMenuItem abrir;
     private JMenuItem salvar;
@@ -25,12 +26,9 @@ public class HungrySnakeGUI extends JFrame{
     }
 
     private void prepareView(){
-        setSize(Toolkit.getDefaultToolkit().getScreenSize().width/4, Toolkit.getDefaultToolkit().getScreenSize().height/4);
+        setSize(600,600);
         setLocationRelativeTo(null);
-        nuevo = new JMenuItem("Nuevo");
-        abrir = new JMenuItem("Abrir");
-        salvar = new JMenuItem("Salvar");
-        salir = new JMenuItem("Salir");
+        setResizable(false);
         setJMenuBar(prepareViewMenu());
     }
 
@@ -56,12 +54,17 @@ public class HungrySnakeGUI extends JFrame{
     }
 
     private JMenuBar prepareViewMenu(){
+        nuevo = new JMenuItem("Nuevo");
+        abrir = new JMenuItem("Abrir");
+        salvar = new JMenuItem("Salvar");
+        salir = new JMenuItem("Salir");
         JMenuBar barra = new JMenuBar();
         JMenu opciones = new JMenu("Opciones");
         opciones.add(nuevo);
-        opciones.add(abrir);
         opciones.addSeparator();
+        opciones.add(abrir);
         opciones.add(salvar);
+        opciones.addSeparator();
         opciones.add(salir);
 
         barra.add(opciones);
@@ -69,34 +72,34 @@ public class HungrySnakeGUI extends JFrame{
     }
     private void prepareControllerMenu(){
         salir.addActionListener(new ActionListener(){
-            @Override
+            
             public void actionPerformed(ActionEvent e){
                 exitAction();
             }
         });
 
         salvar.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerfomed(ActionEvent e){
-                actionSave();
-           } 
+            
+            public void actionPerformed(ActionEvent e){
+                saveAction();
+            }
         });
 
         abrir.addActionListener(new ActionListener(){
-            @Override
+            
             public void actionPerformed(ActionEvent e){
-                actionOpen();
+                openAction();
             }
         });
     }
-    private void actionOpen(){
+    private void openAction(){
         JFileChooser chooser = new JFileChooser();
         chooser.showOpenDialog(this);
         File archivo = chooser.getSelectedFile();
         JOptionPane.showMessageDialog(this, "Acción en construcción:\n" +"Acción abrir\n"+"Nombre del archivo: "+ archivo.getName(), "Abrir", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    private void actionSave(){
+    private void saveAction(){
         JFileChooser chooser = new JFileChooser();
         chooser.showSaveDialog(this);
         File archivo = chooser.getSelectedFile();
