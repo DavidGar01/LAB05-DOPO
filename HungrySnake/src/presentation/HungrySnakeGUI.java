@@ -393,7 +393,7 @@ public class HungrySnakeGUI extends JFrame{
         //SnakeHead
         else if(c == 'H'){
             panel = new JPanel(){
-            
+                @Override
                 protected void paintComponent (Graphics g){
                     super.paintComponent(g);
                     g.setColor(snakeColor);
