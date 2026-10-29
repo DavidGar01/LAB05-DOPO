@@ -315,7 +315,7 @@ public class HungrySnakeGUI extends JFrame{
             }
         }
         else{
-            wallsNumber = 1;
+            wallsNumber = 2.0;
         }
 
         game.removeAll();
