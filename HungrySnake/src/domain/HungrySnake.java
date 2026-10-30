@@ -15,14 +15,14 @@ public class HungrySnake{
 
     /**
      * Create a HungrySnake
-     * @param row
-     * @param column
-     * @param fruits
-     * @param obstacles
+     * @param row are the game's rows
+     * @param column are the game's columns
+     * @param fruits are the fruits that game will have
+     * @param obstacles are the percentage of obstacles
      * @throws HungrySnakeException
      */
     public HungrySnake(int row, int column, int fruits, double obstacles) throws HungrySnakeException{
-        if(row<0 || column <0 || fruits<0 || obstacles<0){
+        if(row<=0 || column <=0 || fruits<0 || obstacles<0){
             throw new HungrySnakeException(HungrySnakeException.NEGATIVE_NUMBERS);
         }
         if((row*column)<= (fruits + ((row*column) * obstacles/100))){
@@ -82,124 +82,165 @@ public class HungrySnake{
 
     /**
      * returns if the snake moved successfully
-     * @param direction
-     * @return isOk
+     * @param direction is the direction where the snake will move
+     * @return if the snake didn't crash with an obstacle
      */
-    public boolean move(char direction) throws HungrySnakeException{
+    public boolean move(char direction) throws HungrySnakeException {
         boolean isOk = true;
         int posYHead = snake.get(0)[0];
         int posXHead = snake.get(0)[1];
-        if(direction=='N'){
-            if(lastDirectionSnake!='S' || size()<=1){
-                if(board[posYHead+1][posXHead] =='F'){
-                    board[posYHead][posXHead] = 'S';
-                    board[posYHead+1][posXHead] = 'H';
-                    snake.add(0, new int[]{posYHead+1, posXHead});
 
-                }
-                else if(board[posYHead+1][posXHead] =='\u0000'){
-                    int[] tempTail = snake.get(size()-1);
-                    board[tempTail[0]][tempTail[1]] = '\u0000';
-                    snake.remove(size()-1);
+        if (direction == 'N') {
+            if (lastDirectionSnake != 'S' || size() <= 1) {
+                int newY = posYHead - 1;
+                int newX = posXHead;
 
-                    board[posYHead+1][posXHead] = 'H';
-                    snake.set(0, new int[]{posYHead+1, posXHead});
-            
-                
-                }else if(posYHead == 0){
+                if (newY < 0) {
                     throw new HungrySnakeException(HungrySnakeException.EXIT_EDGE);
-
-                }else{
-                    isOk=false;
                 }
-            }else{
-                throw new HungrySnakeException(HungrySnakeException.LAST_DIRECTION);
 
-            }
-        
-        }
-        else if(direction=='S'){
-            if(lastDirectionSnake!='N' || size()<=1){
-                if(board[posYHead-1][posXHead] =='F'){
+                if (board[newY][newX] == 'F') {
                     board[posYHead][posXHead] = 'S';
-                    board[posYHead-1][posXHead] = 'H';
-                    snake.add(0, new int[]{posYHead-1, posXHead});
-               
-                }
-                else if (board[posYHead-1][posXHead] =='\u0000'){
-                    int[] tempTail = snake.get(size()-1);
+                    board[newY][newX] = 'H';
+                    snake.add(0, new int[]{newY, newX});
+                    lastDirectionSnake = 'N';
+                    if(size()+walls.size()<row*column){
+                        int a = (int)(Math.random()*row);
+                        int b = (int)(Math.random()*column);
+                        while(board[a][b] !='\u0000'){
+                            a = (int)(Math.random()*row);
+                            b = (int)(Math.random()*column);
+                        }
+                        board[a][b]='F';
+                        fruits.remove(new int[]{newY, newX});
+                        fruits.add(new int[]{a,b});
+                    }
+                } else if (board[newY][newX] == '\u0000') {
+                    int[] tempTail = snake.remove(size() - 1);
                     board[tempTail[0]][tempTail[1]] = '\u0000';
-                    snake.remove(size()-1);
 
-                    board[posYHead-1][posXHead] = 'H';
-                    snake.set(0, new int[]{posYHead-1, posXHead});
-                
-                }else if(posYHead == this.row-1){
-                    throw new HungrySnakeException(HungrySnakeException.EXIT_EDGE);
-                
-
-                }else{
-                    isOk=false;
+                    board[newY][newX] = 'H';
+                    snake.add(0, new int[]{newY, newX});
+                    lastDirectionSnake = 'N';
+                } else {
+                    isOk = false;
                 }
-            }else{
+            } else {
                 throw new HungrySnakeException(HungrySnakeException.LAST_DIRECTION);
             }
-            
-        }
-        else if(direction=='E'){
-            if(lastDirectionSnake!='W' || size()<=1){
-                if(board[posYHead][posXHead+1] =='F'){
-                    board[posYHead][posXHead] = 'S';
-                    board[posYHead][posXHead+1] = 'H';
-                    snake.add(0, new int[]{posYHead, posXHead+1});
-                
-                }
-                else if (board[posYHead][posXHead+1] =='\u0000'){
-                    int[] tempTail = snake.get(size()-1);
-                    board[tempTail[0]][tempTail[1]] = '\u0000';
-                    snake.remove(size()-1);
+        } else if (direction == 'S') {
+            if (lastDirectionSnake != 'N' || size() <= 1) {
+                int newY = posYHead + 1;
+                int newX = posXHead;
 
-                    board[posYHead][posXHead+1] = 'H';
-                    snake.set(0, new int[]{posYHead, posXHead+1});
-                
-                
-                }else if(posXHead == this.column-1){
+                if (newY >= this.row) {
                     throw new HungrySnakeException(HungrySnakeException.EXIT_EDGE);
-
-                    
-                }else{
-                    isOk=false;
                 }
-            }else{
+
+                if (board[newY][newX] == 'F') {
+                    board[posYHead][posXHead] = 'S';
+                    board[newY][newX] = 'H';
+                    snake.add(0, new int[]{newY, newX});
+                    lastDirectionSnake = 'S';
+                    if(size()+walls.size()<row*column){
+                        int a = (int)(Math.random()*row);
+                        int b = (int)(Math.random()*column);
+                        while(board[a][b] !='\u0000'){
+                            a = (int)(Math.random()*row);
+                            b = (int)(Math.random()*column);
+                        }
+                        board[a][b]='F';
+                        fruits.remove(new int[]{newY, newX});
+                        fruits.add(new int[]{a,b});
+                    }
+
+                } else if (board[newY][newX] == '\u0000') {
+                    int[] tempTail = snake.remove(size() - 1);
+                    board[tempTail[0]][tempTail[1]] = '\u0000';
+
+                    board[newY][newX] = 'H';
+                    snake.add(0, new int[]{newY, newX});
+                    lastDirectionSnake = 'S';
+                } else {
+                    isOk = false;
+                }
+            } else {
                 throw new HungrySnakeException(HungrySnakeException.LAST_DIRECTION);
             }
-        
-        }
-        else if(direction=='W'){
-            if(lastDirectionSnake!='E' || size()<=1){
-                if(board[posYHead][posXHead-1] =='F'){
-                    board[posYHead][posXHead] = 'S';
-                    board[posYHead][posXHead-1] = 'H';
-                    snake.add(0, new int[]{posYHead, posXHead-1});
-                
-                }
-                else if (board[posYHead][posXHead-1] =='\u0000'){
-                    int[] tempTail = snake.get(size()-1);
-                    board[tempTail[0]][tempTail[1]] = '\u0000';
-                    snake.remove(size()-1);
+        } else if (direction == 'E') {
+            if (lastDirectionSnake != 'W' || size() <= 1) {
+                int newY = posYHead;
+                int newX = posXHead + 1;
 
-                    board[posYHead][posXHead-1] = 'H';
-                    snake.set(0, new int[]{posYHead, posXHead-1});
-                
-                
-                }else if(posXHead == 0){
+                if (newX >= this.column) {
                     throw new HungrySnakeException(HungrySnakeException.EXIT_EDGE);
-                    
-
-                }else{
-                    isOk=false;
                 }
-            }else{
+
+                if (board[newY][newX] == 'F') {
+                    board[posYHead][posXHead] = 'S';
+                    board[newY][newX] = 'H';
+                    snake.add(0, new int[]{newY, newX});
+                    lastDirectionSnake = 'E';
+                    if(size()+walls.size()<row*column){
+                        int a = (int)(Math.random()*row);
+                        int b = (int)(Math.random()*column);
+                        while(board[a][b] !='\u0000'){
+                            a = (int)(Math.random()*row);
+                            b = (int)(Math.random()*column);
+                        }
+                        board[a][b]='F';
+                        fruits.remove(new int[]{newY, newX});
+                        fruits.add(new int[]{a,b});
+                    }
+                } else if (board[newY][newX] == '\u0000') {
+                    int[] tempTail = snake.remove(size() - 1);
+                    board[tempTail[0]][tempTail[1]] = '\u0000';
+
+                    board[newY][newX] = 'H';
+                    snake.add(0, new int[]{newY, newX});
+                    lastDirectionSnake = 'E';
+                } else {
+                    isOk = false;
+                }
+            } else {
+                throw new HungrySnakeException(HungrySnakeException.LAST_DIRECTION);
+            }
+        } else if (direction == 'W') {
+            if (lastDirectionSnake != 'E' || size() <= 1) {
+                int newY = posYHead;
+                int newX = posXHead - 1;
+
+                if (newX < 0) {
+                    throw new HungrySnakeException(HungrySnakeException.EXIT_EDGE);
+                }
+
+                if (board[newY][newX] == 'F') {
+                    board[posYHead][posXHead] = 'S';
+                    board[newY][newX] = 'H';
+                    snake.add(0, new int[]{newY, newX});
+                    lastDirectionSnake = 'W';
+                    if(size()+walls.size()<row*column){
+                        int a = (int)(Math.random()*row);
+                        int b = (int)(Math.random()*column);
+                        while(board[a][b] !='\u0000'){
+                            a = (int)(Math.random()*row);
+                            b = (int)(Math.random()*column);
+                        }
+                        board[a][b]='F';
+                        fruits.remove(new int[]{newY, newX});
+                        fruits.add(new int[]{a,b});
+                    }
+                } else if (board[newY][newX] == '\u0000') {
+                    int[] tempTail = snake.remove(size() - 1);
+                    board[tempTail[0]][tempTail[1]] = '\u0000';
+
+                    board[newY][newX] = 'H';
+                    snake.add(0, new int[]{newY, newX});
+                    lastDirectionSnake = 'W';
+                } else {
+                    isOk = false;
+                }
+            } else {
                 throw new HungrySnakeException(HungrySnakeException.LAST_DIRECTION);
             }
         }
