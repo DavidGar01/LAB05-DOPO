@@ -106,7 +106,8 @@ public class HungrySnake{
                     board[newY][newX] = 'H';
                     snake.add(0, new int[]{newY, newX});
                     lastDirectionSnake = 'N';
-                    if(size()+obstacles.size()<row*column){
+                    fruits.remove(new int[]{newY, newX});
+                    if(size()+obstacles.size()+fruits.size()<row*column){
                         int a = (int)(Math.random()*row);
                         int b = (int)(Math.random()*column);
                         while(board[a][b] !='\u0000'){
@@ -114,8 +115,9 @@ public class HungrySnake{
                             b = (int)(Math.random()*column);
                         }
                         board[a][b]='F';
-                        fruits.remove(new int[]{newY, newX});
                         fruits.add(new int[]{a,b});
+                    }else{
+                        throw new HungrySnakeException(HungrySnakeException.WIN);
                     }
                 } else if (board[newY][newX] == '\u0000') {
                     int[] tempTail = snake.remove(size() - 1);
@@ -147,7 +149,8 @@ public class HungrySnake{
                     board[newY][newX] = 'H';
                     snake.add(0, new int[]{newY, newX});
                     lastDirectionSnake = 'S';
-                    if(size()+obstacles.size()<row*column){
+                    fruits.remove(new int[]{newY, newX});
+                    if(size()+obstacles.size()+fruits.size()<row*column){
                         int a = (int)(Math.random()*row);
                         int b = (int)(Math.random()*column);
                         while(board[a][b] !='\u0000'){
@@ -155,8 +158,9 @@ public class HungrySnake{
                             b = (int)(Math.random()*column);
                         }
                         board[a][b]='F';
-                        fruits.remove(new int[]{newY, newX});
                         fruits.add(new int[]{a,b});
+                    }else{
+                        throw new HungrySnakeException(HungrySnakeException.WIN);
                     }
 
                 } else if (board[newY][newX] == '\u0000') {
@@ -189,7 +193,8 @@ public class HungrySnake{
                     board[newY][newX] = 'H';
                     snake.add(0, new int[]{newY, newX});
                     lastDirectionSnake = 'E';
-                    if(size()+obstacles.size()<row*column){
+                    fruits.remove(new int[]{newY, newX});
+                    if(size()+obstacles.size()+fruits.size()<row*column){
                         int a = (int)(Math.random()*row);
                         int b = (int)(Math.random()*column);
                         while(board[a][b] !='\u0000'){
@@ -197,8 +202,10 @@ public class HungrySnake{
                             b = (int)(Math.random()*column);
                         }
                         board[a][b]='F';
-                        fruits.remove(new int[]{newY, newX});
+                        
                         fruits.add(new int[]{a,b});
+                    }else{
+                        throw new HungrySnakeException(HungrySnakeException.WIN);
                     }
                 } else if (board[newY][newX] == '\u0000') {
                     int[] tempTail = snake.remove(size() - 1);
@@ -230,7 +237,8 @@ public class HungrySnake{
                     board[newY][newX] = 'H';
                     snake.add(0, new int[]{newY, newX});
                     lastDirectionSnake = 'W';
-                    if(size()+obstacles.size()<row*column){
+                    fruits.remove(new int[]{newY, newX});
+                    if(size()+obstacles.size()+fruits.size()<row*column){
                         int a = (int)(Math.random()*row);
                         int b = (int)(Math.random()*column);
                         while(board[a][b] !='\u0000'){
@@ -238,8 +246,10 @@ public class HungrySnake{
                             b = (int)(Math.random()*column);
                         }
                         board[a][b]='F';
-                        fruits.remove(new int[]{newY, newX});
+                        
                         fruits.add(new int[]{a,b});
+                    }else{
+                        throw new HungrySnakeException(HungrySnakeException.WIN);
                     }
                 } else if (board[newY][newX] == '\u0000') {
                     int[] tempTail = snake.remove(size() - 1);
