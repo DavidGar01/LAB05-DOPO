@@ -45,6 +45,8 @@ public class HungrySnakeGUI extends JFrame{
     private int fruitsNumber = 1;
     private double obstaclesNumber = 2;
     private char lastDirection;
+    private boolean ended;
+
 
     //Game colors
     private Color snakeColor = Color.BLUE;
@@ -53,15 +55,10 @@ public class HungrySnakeGUI extends JFrame{
     private Color firstFloorColor = new Color(162,208,73);
     private Color secondFloorColor = new Color(169,215,81);
     private ArrayList<Color> allColors;
+    private Color colorBeforeDeath= Color.BLUE;;
 
     public HungrySnakeGUI(){
         setTitle("HungrySnake");
-        try{
-            hungrySnake = new HungrySnake(rows, columns, fruitsNumber, obstaclesNumber);
-        }
-        catch(HungrySnakeException e){
-            JOptionPane.showMessageDialog(this, "Ha ocurrido un error: " + e.getMessage(), "Error",JOptionPane.ERROR_MESSAGE );
-        };
         prepareView();
         prepareController();
     }
@@ -113,7 +110,7 @@ public class HungrySnakeGUI extends JFrame{
         panel.setPreferredSize(new Dimension((PREFERRED_DIMENSION.width -  PREFERRED_DIMENSION.height)/2,0));
         panel.setBackground(new Color(86,138,53));
 
-        length = new JLabel("1", JLabel.CENTER);
+        length = new JLabel("0", JLabel.CENTER);
         length.setFont(new Font("Arial", Font.BOLD, 32));
         length.setForeground(snakeColor);
 
@@ -123,7 +120,7 @@ public class HungrySnakeGUI extends JFrame{
         JLabel fruitsInformation = new JLabel("Cantidad de frutas:", JLabel.CENTER);
         fruitsInformation.setFont(new Font("Arial", Font.BOLD, PREFERRED_DIMENSION.width/55));
 
-        fruits = new JLabel(String.valueOf(fruitsNumber), JLabel.CENTER);
+        fruits = new JLabel("0", JLabel.CENTER);
         fruits.setFont(new Font("Arial", Font.BOLD, 32));
         fruits.setForeground(fruitsColor);
 
@@ -225,13 +222,13 @@ public class HungrySnakeGUI extends JFrame{
   
         panel.setBackground(new Color(86,138,53));
         
-        obstacles = new JLabel(String.valueOf(obstaclesNumber)+"%", JLabel.CENTER);
+        obstacles = new JLabel("0"+"%", JLabel.CENTER);
         obstacles.setFont(new Font("Arial", Font.BOLD, 32));
         obstacles.setForeground(obstaclesColor);
-        steps = new JLabel(String.valueOf(stepsNumber), JLabel.CENTER);
+        steps = new JLabel("0", JLabel.CENTER);
         steps.setFont(new Font("Arial", Font.BOLD, 32));
         steps.setForeground(Color.WHITE);
-        JLabel wallsInformation = new JLabel("Porcentaje de Obstaculos:", JLabel.CENTER);
+        JLabel wallsInformation = new JLabel("Porcentaje de obstaculos:", JLabel.CENTER);
         wallsInformation.setFont(new Font("Arial", Font.BOLD, PREFERRED_DIMENSION.width/55));
         JLabel stepsInformation = new JLabel("Cantidad de pasos:", JLabel.CENTER);
         stepsInformation.setFont(new Font("Arial", Font.BOLD, PREFERRED_DIMENSION.width/55));
@@ -329,24 +326,48 @@ public class HungrySnakeGUI extends JFrame{
     }
 
     private void moveAction(char direction){
-        try {
+        try {  
             if(!hungrySnake.move(direction)){
-                JOptionPane.showMessageDialog(this, "¡Se acabó el juego!", "Fin", JOptionPane.INFORMATION_MESSAGE);
+                ended = true;
+                lastDirection = direction;
+                decreaseSnakeColor();
+                refresh();    
+                JOptionPane.showMessageDialog(this, "¡Se acabó el juego!", "Fin", JOptionPane.INFORMATION_MESSAGE);    
                 game.setFocusable(false);
+                JOptionPane.showMessageDialog(this, "Estadísticas de la partida:"+"\n"+"Tamaño máximo de la serpiente: "+String.valueOf(hungrySnake.size())+"\n"+"Pasos dados: "+ String.valueOf(stepsNumber)+"\n"+"Frutas: " + String.valueOf(fruitsNumber) + "\n"+"Porcentaje de obstáculos: "+String.valueOf(obstaclesNumber)+"%", "Estadísticas partida", JOptionPane.INFORMATION_MESSAGE);
+                ended = true;
             }
             else{
-                refresh();
                 lastDirection = direction;
+                refresh();    
+                stepsNumber++;
             }
-            
+               
             
         } catch (HungrySnakeException e) {
             if(e.getMessage().equals(HungrySnakeException.EXIT_EDGE)){
-                JOptionPane.showMessageDialog(this, "¡Se acabó el juego!", "Fin", JOptionPane.INFORMATION_MESSAGE);
+                lastDirection = direction;
+                ended = true;
+                decreaseSnakeColor();
+                refresh();  
+                JOptionPane.showMessageDialog(this, HungrySnakeException.EXIT_EDGE +"\n"+"¡Se acabó el juego!", "Fin", JOptionPane.INFORMATION_MESSAGE);
                 game.setFocusable(false);
+                JOptionPane.showMessageDialog(this, "Estadísticas de la partida:"+"\n"+"Tamaño máximo de la serpiente: "+String.valueOf(hungrySnake.size())+"\n"+"Pasos dados: "+ String.valueOf(stepsNumber)+"\n"+"Frutas: " + String.valueOf(fruitsNumber) + "\n"+"Porcentaje de obstáculos: "+String.valueOf(obstaclesNumber)+"%", "Estadísticas partida", JOptionPane.INFORMATION_MESSAGE);
             }
-            JOptionPane.showMessageDialog(this, "Ha ocurrido un error: "+ e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            else{
+                JOptionPane.showMessageDialog(this, "Ha ocurrido un error: " + e.getMessage(), "Error",JOptionPane.ERROR_MESSAGE );
+            }
+
         }
+    }
+
+    private void decreaseSnakeColor(){
+        colorBeforeDeath = snakeColor;
+        int red = snakeColor.getRed();
+        int green = snakeColor.getGreen();
+        int blue = snakeColor.getBlue();
+        
+        snakeColor = new Color((int)(red+(255-red)*0.5), (int)(green+(255-green)*0.5), (int)(blue+(255-blue)*0.5));
     }
 
     private void exitAction(){
@@ -358,39 +379,46 @@ public class HungrySnakeGUI extends JFrame{
 
     private void startGameAction(){
         stepsNumber = 0;
-        lastDirection = 'E';
         String newFruitsNumber = JOptionPane.showInputDialog(this, "Dame la cantidad de frutas que va a tener: ");
         if(newFruitsNumber != null){
             try{
                 fruitsNumber = Integer.parseInt(newFruitsNumber);
             }
             catch(NumberFormatException e){
-                JOptionPane.showMessageDialog(this, "El texto no es un número válido", "No es un número válido", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "El texto no es un número válido." + "\n"+"Se pondrá por defecto 1", "No es un número válido", JOptionPane.ERROR_MESSAGE);
             }
         }
         else{
             fruitsNumber = 1;
         }
-        String newWallsNumber = JOptionPane.showInputDialog(this, "Dame el porcentaje de muros que va a tener: ");
+        String newWallsNumber = JOptionPane.showInputDialog(this, "Dame el porcentaje de obstáculos que va a tener: ");
         if(newWallsNumber != null){
             try{
                 obstaclesNumber = Double.parseDouble(newWallsNumber);
             }
             catch(NumberFormatException e){
-                JOptionPane.showMessageDialog(this, "El texto no es un número válido", "No es un número válido", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "El texto no es un número válido."+ "\n"+"Se pondrá por defecto 2%", "No es un número válido", JOptionPane.ERROR_MESSAGE);
             }
         }
         else{
             obstaclesNumber = 2.0;
         }
-        try{
-            hungrySnake = new HungrySnake(rows, columns, fruitsNumber, obstaclesNumber);
-            refresh();
-            game.setFocusable(true);
-        }
-        catch(HungrySnakeException e){
-            JOptionPane.showMessageDialog(this, "Ha ocurrido un error: " + e.getMessage(), "Error",JOptionPane.ERROR_MESSAGE );
-        };
+            try{
+              hungrySnake = new HungrySnake(rows, columns, fruitsNumber, obstaclesNumber);
+              snakeColor = colorBeforeDeath;
+              length.setForeground(snakeColor);
+              ended = false;
+             }
+            catch(HungrySnakeException e){
+                JOptionPane.showMessageDialog(this, "Ha ocurrido un error: " + e.getMessage(), "Error",JOptionPane.ERROR_MESSAGE );
+                startGameAction();
+           };
+        lastDirection = 'E';
+
+        game.setFocusable(true);
+        game.requestFocusInWindow();
+        game.removeAll();
+        prepareGame();
         refresh();
     }
 
@@ -414,26 +442,23 @@ public class HungrySnakeGUI extends JFrame{
     }
     
     private void refresh(){
-        game.removeAll();
-        prepareGame();
-
-        char[][] board = hungrySnake.board();
+        char[][] gameBoard = hungrySnake.board();
         
-        for(int i = 0; i < board.length; i++){
-            for(int j = 0;j< board[0].length; j++){
-                paintPanelComponents(board[i][j], i,j);
+        for(int i = 0; i < gameBoard.length; i++){
+            for(int j = 0;j< gameBoard[0].length; j++){
+                board[i][j].removeAll();
+                paintPanelComponents(gameBoard[i][j], i,j);
             }
         }
 
-        stepsNumber++;
         
         obstacles.setText(String.valueOf(obstaclesNumber)+"%");
         steps.setText(String.valueOf(stepsNumber));
         fruits.setText(String.valueOf(fruitsNumber));
+        length.setText(String.valueOf(hungrySnake.size()));
 
         game.revalidate();
         game.repaint();
-        game.setFocusable(true);
     }
 
     private void paintPanelComponents(char c, int row, int column){
@@ -476,36 +501,78 @@ public class HungrySnakeGUI extends JFrame{
                     g.fillRect(0,0,getWidth(),getHeight());
                     if(lastDirection == 'E'){
                         g.setColor(Color.WHITE);
-                        g.fillRect(12*getWidth()/20,4*getHeight()/20,4*getWidth()/25,3*getHeight()/10);
+                        if(ended){
+                            g.fillRect(11*getWidth()/20,4*getHeight()/20,7*getWidth()/25,4*getHeight()/10);
+                        }
+                        else{
+                            g.fillRect(12*getWidth()/20,4*getHeight()/20,4*getWidth()/25,3*getHeight()/10);
+                        }
                         g.fillRect(12*getWidth()/20,12*getHeight()/20,4*getWidth()/25,3*getHeight()/10);
                         g.setColor(Color.BLACK);
-                        g.fillRect(13*getWidth()/20,5*getHeight()/20,3*getWidth()/25,2*getHeight()/10);
+                        if(ended){
+                            g.fillRect(13*getWidth()/20,5*getHeight()/20,4*getWidth()/25,3*getHeight()/10);
+                        }
+                        else{
+                            g.fillRect(13*getWidth()/20,5*getHeight()/20,3*getWidth()/25,2*getHeight()/10);
+                        }
                         g.fillRect(13*getWidth()/20,13*getHeight()/20,3*getWidth()/25,2*getHeight()/10);
 
                     }
                     else if(lastDirection == 'W'){
                         g.setColor(Color.WHITE);
                         g.fillRect(5*getWidth()/20,4*getHeight()/20,4*getWidth()/25,3*getHeight()/10);
-                        g.fillRect(5*getWidth()/20,12*getHeight()/20,4*getWidth()/25,3*getHeight()/10);
+                        if(ended){
+                            g.fillRect(5*getWidth()/20,12*getHeight()/20,7*getWidth()/25,4*getHeight()/10);
+                        }
+                        else{
+                            g.fillRect(5*getWidth()/20,12*getHeight()/20,4*getWidth()/25,3*getHeight()/10);
+                        }
                         g.setColor(Color.BLACK);
                         g.fillRect(5*getWidth()/20,5*getHeight()/20,3*getWidth()/25,2*getHeight()/10);
-                        g.fillRect(5*getWidth()/20,13*getHeight()/20,3*getWidth()/25,2*getHeight()/10);
+                        if(ended){
+                            g.fillRect(5*getWidth()/20,13*getHeight()/20,4*getWidth()/25,3*getHeight()/10);
+                        }
+                        else{
+                            g.fillRect(5*getWidth()/20,13*getHeight()/20,3*getWidth()/25,2*getHeight()/10);
+                        }
+                        
                     }
                     else if(lastDirection == 'S'){
                         g.setColor(Color.WHITE);
                         g.fillRect(4*getHeight()/20,12*getWidth()/20,3*getHeight()/10,4*getWidth()/25);
-                        g.fillRect(12*getHeight()/20,12*getWidth()/20,3*getHeight()/10,4*getWidth()/25);
+                        if(ended){
+                            g.fillRect(12*getHeight()/20,11*getWidth()/20,4*getHeight()/10,7*getWidth()/25);
+                        }
+                        else{
+                            g.fillRect(12*getHeight()/20,12*getWidth()/20,3*getHeight()/10,4*getWidth()/25);
+                        }
                         g.setColor(Color.BLACK);
                         g.fillRect(5*getHeight()/20,13*getWidth()/20,2*getHeight()/10,3*getWidth()/25);
-                        g.fillRect(13*getHeight()/20,13*getWidth()/20,2*getHeight()/10,3*getWidth()/25);
+                        if(ended){
+                            g.fillRect(13*getHeight()/20,13*getWidth()/20,3*getHeight()/10,4*getWidth()/25);
+                        }
+                        else{
+                            g.fillRect(13*getHeight()/20,13*getWidth()/20,2*getHeight()/10,3*getWidth()/25);
+                        }
                     }
                     else if(lastDirection == 'N'){
                         g.setColor(Color.WHITE);
                         g.fillRect(4*getHeight()/20,4*getWidth()/20,3*getHeight()/10,4*getWidth()/25);
-                        g.fillRect(12*getHeight()/20,4*getWidth()/20,3*getHeight()/10,4*getWidth()/25);
+                        if(ended){
+                            g.fillRect(12*getHeight()/20,4*getWidth()/20,4*getHeight()/10,7*getWidth()/25);
+                        }
+                        else{
+                            g.fillRect(12*getHeight()/20,4*getWidth()/20,3*getHeight()/10,4*getWidth()/25);
+                        }
+                        
                         g.setColor(Color.BLACK);
                         g.fillRect(5*getHeight()/20,4*getWidth()/20,2*getHeight()/10,3*getWidth()/25);
-                        g.fillRect(13*getHeight()/20,4*getWidth()/20,2*getHeight()/10,3*getWidth()/25);
+                        if(ended){
+                            g.fillRect(13*getHeight()/20,4*getWidth()/20,3*getHeight()/10,4*getWidth()/25);
+                        }
+                        else{
+                            g.fillRect(13*getHeight()/20,4*getWidth()/20,2*getHeight()/10,3*getWidth()/25);
+                        }
                     }
                 }
             };
@@ -544,7 +611,7 @@ public class HungrySnakeGUI extends JFrame{
     }
 
     private void changeColorAction(){
-        String[] opciones = {"Frutas","Serpiente","Obstaculos","Piso 1", "Piso 2"};
+        String[] opciones = {"Frutas","Serpiente","Obstáculos","Piso 1", "Piso 2"};
                 int opcion = JOptionPane.showOptionDialog( this, "¿A que le quieres cambiar el color?", "Cambiar color", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, opciones, "Caja");
                 if(opcion != -1){
                     Color color1 = JColorChooser.showDialog( this, "Selecciona un color", Color.ORANGE);
@@ -571,6 +638,9 @@ public class HungrySnakeGUI extends JFrame{
                         else if(opcion == 1){
                             snakeColor = color1;
                             length.setForeground(snakeColor);
+                            if(ended){
+                                colorBeforeDeath = color1;
+                            }
                         }
                         else if(opcion == 2) {
                             obstaclesColor = color1;
