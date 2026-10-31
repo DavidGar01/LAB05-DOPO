@@ -1,5 +1,5 @@
 package presentation;
-import domain.HungrySnake;
+import domain.*;
 
 import javax.swing.*;
 import java.awt.event.*;
@@ -56,7 +56,12 @@ public class HungrySnakeGUI extends JFrame{
 
     public HungrySnakeGUI(){
         setTitle("HungrySnake");
-        hungrySnake = new HungrySnake(rows, columns, fruitsNumber, obstaclesNumber);
+        try{
+            hungrySnake = new HungrySnake(rows, columns, fruitsNumber, obstaclesNumber);
+        }
+        catch(HungrySnakeException e){
+            JOptionPane.showMessageDialog(this, "Ha ocurrido un error: " + e.getMessage(), "Error",JOptionPane.ERROR_MESSAGE );
+        };
         prepareView();
         prepareController();
     }
@@ -308,16 +313,12 @@ public class HungrySnakeGUI extends JFrame{
             @Override
             public void keyPressed(KeyEvent e){
                 if(e.getKeyCode() == KeyEvent.VK_RIGHT){
-                    hungrySnake.move('E');
                 }
                 else if (e.getKeyCode() == KeyEvent.VK_LEFT){
-                    hungrySnake.move('W');
                 }
                 else if (e.getKeyCode() == KeyEvent.VK_UP){
-                    hungrySnake.move('N');
                 }
                 else if (e.getKeyCode() == KeyEvent.VK_DOWN){
-                    hungrySnake.move('S');
                 }
             }
 
@@ -386,8 +387,8 @@ public class HungrySnakeGUI extends JFrame{
         char[][] board = hungrySnake.board();
         
         for(int i = 0; i < board.length; i++){
-            for(int j = 0; board[0].length; j++){
-                paintPanelComponets(board[i][j], i,j);
+            for(int j = 0;j< board[0].length; j++){
+                paintPanelComponents(board[i][j], i,j);
             }
         }
 
