@@ -41,10 +41,10 @@ public class HungrySnakeGUI extends JFrame{
     //Game attributes
     private int rows = 25;
     private int columns = 25;
-    private int stepsNumber = 0;
+    private int stepsNumber;
     private int fruitsNumber = 1;
     private double obstaclesNumber = 2;
-    private char lastDirection = 'E';
+    private char lastDirection;
 
     //Game colors
     private Color snakeColor = Color.BLUE;
@@ -357,7 +357,8 @@ public class HungrySnakeGUI extends JFrame{
     }
 
     private void startGameAction(){
-        
+        stepsNumber = 0;
+        lastDirection = 'E';
         String newFruitsNumber = JOptionPane.showInputDialog(this, "Dame la cantidad de frutas que va a tener: ");
         if(newFruitsNumber != null){
             try{
@@ -384,6 +385,7 @@ public class HungrySnakeGUI extends JFrame{
         }
         try{
             hungrySnake = new HungrySnake(rows, columns, fruitsNumber, obstaclesNumber);
+            refresh();
             game.setFocusable(true);
         }
         catch(HungrySnakeException e){
