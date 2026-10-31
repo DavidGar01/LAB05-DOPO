@@ -733,7 +733,10 @@ public class HungrySnakeGUI extends JFrame{
                             secondFloorColor = color1;
 
                         }
-                        refresh();
+                        if(hungrySnake != null){
+                            refresh();
+                        }
+                        
                     }
                     
         }

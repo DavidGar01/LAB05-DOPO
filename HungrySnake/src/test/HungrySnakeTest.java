@@ -140,7 +140,7 @@ public class HungrySnakeTest {
             }else if(snakePosition[1] != 9){
                 game.move('E');
                 board = game.board();
-                assertEquals('H', board[snakePosition[0]-1][snakePosition[1]]);
+                assertEquals('H', board[snakePosition[0]][snakePosition[1]+1]);
             }
 
 
@@ -261,10 +261,10 @@ public class HungrySnakeTest {
     }
 
     /**
-     * Should not add more fruits if there's no space
+     * Should win if there's no more space for fruits
      */
     @Test
-    public void shouldNotAddMoreFruitsIfThereIsNoSpace(){
+    public void shouldWinIfThereIsNoMoreSpaceForFruits(){
         try{
             HungrySnake game = new HungrySnake(2,1,1,0);
             char[][] board = game.board();
@@ -288,28 +288,20 @@ public class HungrySnakeTest {
                     game.move('N');
                 }
             }
-            board = game.board();
-            int fruitFound = 0;
-
-            for(int i = 0; i<2; i++){
-                if(board[i][0] == 'F'){
-                    fruitFound++;
-                }
-            }
-            assertEquals(2, game.size());
-            assertEquals(0, fruitFound);
+            fail("Didn't throw an exception");
         }
         catch(HungrySnakeException e){
-            fail("Did throw an exception");
+            assertEquals(HungrySnakeException.WIN, e.getMessage());
         }
     }
     
     /**
      * Shouldn't be ok the move is snake collides with an obstacle
      */
+    @Test
     public void shouldNotBeOkIfSnakeCollidesWithAnObstacle(){
         try{
-            HungrySnake game = new HungrySnake(2,1,1,0);
+            HungrySnake game = new HungrySnake(2,1,0,50);
             char[][] board = game.board();
             int snakePosY = 0;
             int obstaclePosY = 0;
@@ -381,7 +373,7 @@ public class HungrySnakeTest {
         }
     }
 
-    /**
+/**
      * Snake shouldn't move back if it has at least two of length
      */
     @Test
@@ -391,7 +383,8 @@ public class HungrySnakeTest {
             char[][] board = game.board();
             int snakePosY = 0;
             int fruitPosY = 0;
-            for(int i = 0; i<5; i++){
+            
+            for(int i = 0; i < 5; i++){
                 if(board[i][0] == 'F'){
                     fruitPosY = i;
                 }
@@ -399,21 +392,21 @@ public class HungrySnakeTest {
                     snakePosY = i;
                 }
             }
-            if(snakePosY<fruitPosY){
-                for(int i =0; i < fruitPosY-snakePosY; i++){
+            
+            if(snakePosY < fruitPosY){
+                for(int i = 0; i < fruitPosY - snakePosY; i++){
                     game.move('S');
-                    game.move('N');
                 }
+                game.move('N');
             }
             else{
-                for(int i =0; i < snakePosY-fruitPosY; i++){
+                for(int i = 0; i < snakePosY - fruitPosY; i++){
                     game.move('N');
-                    game.move('S');
-
                 }
+                game.move('S');
             }
             
-             fail("Did throw an exception");
+            fail("Didn't throw an exception");
         }
         catch(HungrySnakeException e){
             assertEquals(HungrySnakeException.LAST_DIRECTION, e.getMessage());
