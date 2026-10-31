@@ -341,6 +341,10 @@ public class HungrySnakeGUI extends JFrame{
             
             
         } catch (HungrySnakeException e) {
+            if(e.getMessage().equals(HungrySnakeException.EXIT_EDGE)){
+                JOptionPane.showMessageDialog(this, "¡Se acabó el juego!", "Fin", JOptionPane.INFORMATION_MESSAGE);
+                game.setFocusable(false);
+            }
             JOptionPane.showMessageDialog(this, "Ha ocurrido un error: "+ e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -380,6 +384,7 @@ public class HungrySnakeGUI extends JFrame{
         }
         try{
             hungrySnake = new HungrySnake(rows, columns, fruitsNumber, obstaclesNumber);
+            game.setFocusable(true);
         }
         catch(HungrySnakeException e){
             JOptionPane.showMessageDialog(this, "Ha ocurrido un error: " + e.getMessage(), "Error",JOptionPane.ERROR_MESSAGE );
