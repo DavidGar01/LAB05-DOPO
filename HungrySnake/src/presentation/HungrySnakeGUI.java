@@ -26,6 +26,7 @@ public class HungrySnakeGUI extends JFrame{
     private JMenuItem salvar;
     private JMenuItem salir;
     private JMenuItem colores;
+    private JMenuItem reiniciar;
 
     //Information items
     private JLabel length;
@@ -76,11 +77,14 @@ public class HungrySnakeGUI extends JFrame{
         abrir = new JMenuItem("Abrir");
         salvar = new JMenuItem("Salvar");
         salir = new JMenuItem("Salir");
+        reiniciar = new JMenuItem("Reiniciar");
         colores = new JMenuItem("Cambiar Color");
+
         JMenuBar barra = new JMenuBar();
         JMenu archivo = new JMenu("Archivo");
         JMenu color = new JMenu("Colores");
         archivo.add(nuevo);
+        archivo.add(reiniciar);
         archivo.addSeparator();
         archivo.add(abrir);
         archivo.add(salvar);
@@ -293,11 +297,17 @@ public class HungrySnakeGUI extends JFrame{
                 startGameAction();
             }
         });
+        reiniciar.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                restartGameAction();
+            }
+        });
         colores.addActionListener( new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 changeColorAction();
             }
         });
+
     }
     private void prepareControllerBoard(){
         jugar.addActionListener( new ActionListener(){
@@ -339,8 +349,8 @@ public class HungrySnakeGUI extends JFrame{
             }
             else{
                 lastDirection = direction;
-                refresh();    
                 stepsNumber++;
+                refresh();    
                 if(wonHungrySnake()){
                     JOptionPane.showMessageDialog(this, "¡Ganaste! ¡Felicidades!", "Fin", JOptionPane.INFORMATION_MESSAGE); 
                     game.setFocusable(false);
@@ -382,6 +392,29 @@ public class HungrySnakeGUI extends JFrame{
         if(selection ==  JOptionPane.YES_OPTION){
             System.exit(0);
         }
+    }
+
+    private void restartGameAction(){
+        try {
+            if(lastDirection != '\u0000'){
+                hungrySnake = new HungrySnake(rows, columns, fruitsNumber, obstaclesNumber);
+                lastDirection = 'E';
+                snakeColor = colorBeforeDeath;
+                length.setForeground(snakeColor);
+                ended = false;
+                stepsNumber = 0;
+                game.setFocusable(true);
+                game.requestFocusInWindow();
+                game.removeAll();
+                prepareGame();
+                refresh();
+            }else{
+                JOptionPane.showMessageDialog(this, "Ha ocurrido un error: No ha se ha iniciado la partida" , "Error",JOptionPane.ERROR_MESSAGE );
+            }
+            
+        } catch (HungrySnakeException e) {
+            JOptionPane.showMessageDialog(this, "Ha ocurrido un error: " + e.getMessage(), "Error",JOptionPane.ERROR_MESSAGE );
+        }   
     }
 
     private void startGameAction(){
