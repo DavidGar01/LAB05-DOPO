@@ -44,7 +44,7 @@ public class HungrySnakeGUI extends JFrame{
     private int stepsNumber = 0;
     private int fruitsNumber = 1;
     private double obstaclesNumber = 2;
-    private char lastDirection = 'N';
+    private char lastDirection = 'E';
 
     //Game colors
     private Color snakeColor = Color.BLUE;
@@ -336,6 +336,7 @@ public class HungrySnakeGUI extends JFrame{
             }
             else{
                 refresh();
+                lastDirection = direction;
             }
             
             
