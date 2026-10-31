@@ -1,8 +1,11 @@
+
+
 package presentation;
 import javax.swing.*;
 import java.awt.event.*;
 import java.io.File;
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * Represents a HungrySnakeGUI
@@ -19,10 +22,11 @@ public class HungrySnakeGUI extends JFrame{
     private JMenuItem abrir;
     private JMenuItem salvar;
     private JMenuItem salir;
+    private JMenuItem colores;
 
     //Information items
     private JLabel length;
-    private JLabel walls;
+    private JLabel obstacles;
     private JLabel steps;
     private JLabel fruits;
 
@@ -36,15 +40,16 @@ public class HungrySnakeGUI extends JFrame{
     private int columns = 25;
     private int stepsNumber = 0;
     private int fruitsNumber = 1;
-    private double wallsNumber = 2;
+    private double obstaclesNumber = 2;
     private char lastDirection = 'N';
 
     //Game colors
     private Color snakeColor = Color.BLUE;
-    private Color wallsColor = Color.BLACK;
+    private Color obstaclesColor = Color.BLACK;
     private Color fruitsColor = Color.RED;
     private Color firstFloorColor = new Color(162,208,73);
     private Color secondFloorColor = new Color(169,215,81);
+    private ArrayList<Color> allColors;
 
     public HungrySnakeGUI(){
         setTitle("HungrySnake");
@@ -65,16 +70,22 @@ public class HungrySnakeGUI extends JFrame{
         abrir = new JMenuItem("Abrir");
         salvar = new JMenuItem("Salvar");
         salir = new JMenuItem("Salir");
+        colores = new JMenuItem("Cambiar Color");
         JMenuBar barra = new JMenuBar();
         JMenu archivo = new JMenu("Archivo");
+        JMenu color = new JMenu("Colores");
         archivo.add(nuevo);
         archivo.addSeparator();
         archivo.add(abrir);
         archivo.add(salvar);
         archivo.addSeparator();
         archivo.add(salir);
+        color.add(colores);
+
+        
 
         barra.add(archivo);
+        barra.add(color);
         return barra;
     }
 
@@ -205,13 +216,13 @@ public class HungrySnakeGUI extends JFrame{
   
         panel.setBackground(new Color(86,138,53));
         
-        walls = new JLabel(String.valueOf(wallsNumber)+"%", JLabel.CENTER);
-        walls.setFont(new Font("Arial", Font.BOLD, 32));
-        walls.setForeground(Color.WHITE);
+        obstacles = new JLabel(String.valueOf(obstaclesNumber)+"%", JLabel.CENTER);
+        obstacles.setFont(new Font("Arial", Font.BOLD, 32));
+        obstacles.setForeground(Color.WHITE);
         steps = new JLabel(String.valueOf(stepsNumber), JLabel.CENTER);
         steps.setFont(new Font("Arial", Font.BOLD, 32));
         steps.setForeground(Color.WHITE);
-        JLabel wallsInformation = new JLabel("Porcentaje de muros:", JLabel.CENTER);
+        JLabel wallsInformation = new JLabel("Porcentaje de Obstaculos:", JLabel.CENTER);
         wallsInformation.setFont(new Font("Arial", Font.BOLD, PREFERRED_DIMENSION.width/50));
         JLabel stepsInformation = new JLabel("Cantidad de pasos:", JLabel.CENTER);
         stepsInformation.setFont(new Font("Arial", Font.BOLD, PREFERRED_DIMENSION.width/50));
@@ -222,7 +233,7 @@ public class HungrySnakeGUI extends JFrame{
                 panel.add(wallsInformation);
             }
             else if (i == 2){
-                panel.add(walls);
+                panel.add(obstacles);
             }
             else if(i==4){
                 panel.add(stepsInformation);
@@ -276,6 +287,11 @@ public class HungrySnakeGUI extends JFrame{
                 startGameAction();
             }
         });
+        colores.addActionListener( new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                changeColorAction();
+            }
+        });
     }
     private void prepareControllerBoard(){
         jugar.addActionListener( new ActionListener(){
@@ -308,21 +324,19 @@ public class HungrySnakeGUI extends JFrame{
         String newWallsNumber = JOptionPane.showInputDialog(this, "Dame el porcentaje de muros que va a tener: ");
         if(newWallsNumber != null){
             try{
-                wallsNumber = Double.parseDouble(newWallsNumber);
+                obstaclesNumber = Double.parseDouble(newWallsNumber);
             }
             catch(NumberFormatException e){
                 JOptionPane.showMessageDialog(this, "El texto no es un número válido", "No es un número válido", JOptionPane.ERROR_MESSAGE);
             }
         }
         else{
-            wallsNumber = 2.0;
+            obstaclesNumber = 2.0;
         }
 
         game.removeAll();
         prepareGame();
         refresh();
-        game.revalidate();
-        game.repaint();
     }
 
     private void prepareGame(){
@@ -345,26 +359,30 @@ public class HungrySnakeGUI extends JFrame{
     }
     
     private void refresh(){
+        
         int[] snakePosition = new int[]{3,3};
-        int[] wall1Position = new int[]{12,2};
-        int[] wall2Position = new int[]{5,5};
+        int[] obstacle1Position = new int[]{12,2};
+        int[] obstacle2Position = new int[]{5,5};
         int[] fruitPosition = new int[]{10,8};
 
         paintPanelComponents('H',snakePosition[0], snakePosition[1] );
-        paintPanelComponents('O',wall1Position[0], wall1Position[1] );
-        paintPanelComponents('O',wall2Position[0], wall2Position[1] );
+        paintPanelComponents('O',obstacle1Position[0], obstacle1Position[1] );
+        paintPanelComponents('O',obstacle2Position[0], obstacle2Position[1] );
         paintPanelComponents('F',fruitPosition[0], fruitPosition[1] );
 
-        walls.setText(String.valueOf(wallsNumber)+"%");
+        obstacles.setText(String.valueOf(obstaclesNumber)+"%");
         steps.setText(String.valueOf(stepsNumber));
         fruits.setText(String.valueOf(fruitsNumber));
+
+        game.revalidate();
+        game.repaint();
     }
 
     private void paintPanelComponents(char c, int row, int column){
         JPanel panel = new JPanel();
         //Wall
         if(c == 'O'){
-            panel.setBackground(wallsColor);
+            panel.setBackground(obstaclesColor);
         }
         //Fruit
         else if(c == 'F'){
@@ -465,6 +483,56 @@ public class HungrySnakeGUI extends JFrame{
             return;
         }
         JOptionPane.showMessageDialog(this, "Acción en construcción:\n" +"Acción salvar\n"+"Nombre del archivo: "+ archivo.getName(), "Salvar", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void changeColorAction(){
+        String[] opciones = {"Frutas","Serpiente","Obstaculos","Piso 1", "Piso 2"};
+                int opcion = JOptionPane.showOptionDialog( this, "¿A que le quieres cambiar el color?", "Cambiar color", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, opciones, "Caja");
+                if(opcion != -1){
+                    Color color1 = JColorChooser.showDialog( this, "Selecciona un color", Color.ORANGE);
+                    allColors = new ArrayList<>();
+                    allColors.add(snakeColor);
+                    allColors.add(obstaclesColor);
+                    allColors.add(fruitsColor);
+                    allColors.add(firstFloorColor);
+                    allColors.add(secondFloorColor);
+                    boolean isIn = false;
+                    
+                    if(allColors.contains(color1)){
+                        JOptionPane.showMessageDialog(this, "Este color ya se esta en uso", "Color", JOptionPane.ERROR_MESSAGE);
+                        isIn = true;
+                    }
+                    
+
+                    if(!isIn && color1 != null){
+                        
+                        if (opcion == 0){
+                            fruitsColor = color1;
+                            refresh();
+                        }
+                        else if(opcion == 1){
+                            snakeColor = color1;
+                            refresh();
+                        }
+                        else if(opcion == 2) {
+                            obstaclesColor = color1;
+                            refresh();
+                        }
+                        else if(opcion == 3){
+                            firstFloorColor = color1;
+                            refresh();
+
+                        }else{
+                            secondFloorColor = color1;
+                            refresh();
+
+                        }
+                    }
+                    
+        }
+
+                    
+                    
     }
 
     /**
