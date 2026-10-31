@@ -341,6 +341,12 @@ public class HungrySnakeGUI extends JFrame{
                 lastDirection = direction;
                 refresh();    
                 stepsNumber++;
+                if(wonHungrySnake()){
+                    JOptionPane.showMessageDialog(this, "¡Ganaste! ¡Felicidades!", "Fin", JOptionPane.INFORMATION_MESSAGE); 
+                    game.setFocusable(false);
+                    JOptionPane.showMessageDialog(this, "Estadísticas de la partida:"+"\n"+"Tamaño máximo de la serpiente: "+String.valueOf(hungrySnake.size())+"\n"+"Pasos dados: "+ String.valueOf(stepsNumber)+"\n"+"Frutas: " + String.valueOf(fruitsNumber) + "\n"+"Porcentaje de obstáculos: "+String.valueOf(obstaclesNumber)+"%", "Estadísticas partida", JOptionPane.INFORMATION_MESSAGE);
+                    ended = true;
+                }
             }
                
             
@@ -359,6 +365,7 @@ public class HungrySnakeGUI extends JFrame{
             }
 
         }
+
     }
 
     private void decreaseSnakeColor(){
@@ -608,6 +615,23 @@ public class HungrySnakeGUI extends JFrame{
             return;
         }
         JOptionPane.showMessageDialog(this, "Acción en construcción:\n" +"Acción salvar\n"+"Nombre del archivo: "+ archivo.getName(), "Salvar", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private boolean wonHungrySnake(){
+        if(fruitsNumber == 0){
+            return false;
+        }
+        else{
+            char[][] board = hungrySnake.board();
+            for(int i = 0; i < board.length; i++){
+                for(int j = 0; j < board[0].length; j++){
+                    if(board[i][j] == 'F'){
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     private void changeColorAction(){
