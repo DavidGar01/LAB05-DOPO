@@ -366,10 +366,11 @@ public class HungrySnakeGUI extends JFrame{
                 JOptionPane.showMessageDialog(this, "Estadísticas de la partida:"+"\n"+"Tamaño máximo de la serpiente: "+String.valueOf(hungrySnake.size())+"\n"+"Pasos dados: "+ String.valueOf(stepsNumber)+"\n"+"Frutas: " + String.valueOf(fruitsNumber) + "\n"+"Porcentaje de obstáculos: "+String.valueOf(obstaclesNumber)+"%", "Estadísticas partida", JOptionPane.INFORMATION_MESSAGE);
             }
             else if(e.getMessage().equals(HungrySnakeException.WIN)){
+                lastDirection = direction;
+                refresh();
                 JOptionPane.showMessageDialog(this, "¡Ganaste! ¡Felicidades!", "Fin", JOptionPane.INFORMATION_MESSAGE); 
                 game.setFocusable(false);
                 JOptionPane.showMessageDialog(this, "Estadísticas de la partida:"+"\n"+"Tamaño máximo de la serpiente: "+String.valueOf(hungrySnake.size())+"\n"+"Pasos dados: "+ String.valueOf(stepsNumber)+"\n"+"Frutas: " + String.valueOf(fruitsNumber) + "\n"+"Porcentaje de obstáculos: "+String.valueOf(obstaclesNumber)+"%", "Estadísticas partida", JOptionPane.INFORMATION_MESSAGE);
-                ended = true;
             }
             else{
                 JOptionPane.showMessageDialog(this, "Ha ocurrido un error: " + e.getMessage(), "Error",JOptionPane.ERROR_MESSAGE );

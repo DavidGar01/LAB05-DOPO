@@ -107,7 +107,7 @@ public class HungrySnake{
                     snake.add(0, new int[]{newY, newX});
                     lastDirectionSnake = 'N';
                     fruits.remove(new int[]{newY, newX});
-                    if(size()+obstacles.size()+fruits.size()<row*column){
+                    if(size()+obstacles.size()<row*column){
                         int a = (int)(Math.random()*row);
                         int b = (int)(Math.random()*column);
                         while(board[a][b] !='\u0000'){
@@ -150,7 +150,7 @@ public class HungrySnake{
                     snake.add(0, new int[]{newY, newX});
                     lastDirectionSnake = 'S';
                     fruits.remove(new int[]{newY, newX});
-                    if(size()+obstacles.size()+fruits.size()<row*column){
+                    if(size()+obstacles.size()<row*column){
                         int a = (int)(Math.random()*row);
                         int b = (int)(Math.random()*column);
                         while(board[a][b] !='\u0000'){
@@ -194,7 +194,7 @@ public class HungrySnake{
                     snake.add(0, new int[]{newY, newX});
                     lastDirectionSnake = 'E';
                     fruits.remove(new int[]{newY, newX});
-                    if(size()+obstacles.size()+fruits.size()<row*column){
+                    if(size()+obstacles.size()<row*column){
                         int a = (int)(Math.random()*row);
                         int b = (int)(Math.random()*column);
                         while(board[a][b] !='\u0000'){
@@ -238,7 +238,7 @@ public class HungrySnake{
                     snake.add(0, new int[]{newY, newX});
                     lastDirectionSnake = 'W';
                     fruits.remove(new int[]{newY, newX});
-                    if(size()+obstacles.size()+fruits.size()<row*column){
+                    if(size()+obstacles.size()<row*column){
                         int a = (int)(Math.random()*row);
                         int b = (int)(Math.random()*column);
                         while(board[a][b] !='\u0000'){
