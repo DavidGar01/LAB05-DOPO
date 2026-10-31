@@ -1,6 +1,9 @@
 
 
 package presentation;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+
 import javax.swing.*;
 import java.awt.event.*;
 import java.io.File;
@@ -13,11 +16,8 @@ import java.util.ArrayList;
  */
 
 public class HungrySnakeGUI extends JFrame{
-    //JFrame size
     private static final Dimension PREFERRED_DIMENSION = new Dimension (Toolkit.getDefaultToolkit().getScreenSize().width/2, Toolkit.getDefaultToolkit().getScreenSize().height/2);
-    //For JPanelArea there's less 16px for width and there's less 64px for the height 
 
-    //Menu items
     private JMenuItem nuevo;
     private JMenuItem abrir;
     private JMenuItem salvar;
@@ -58,11 +58,31 @@ public class HungrySnakeGUI extends JFrame{
     }
 
     private void prepareView(){
-        setSize(PREFERRED_DIMENSION);
+        setSize(600,600);
         setLocationRelativeTo(null);
         setResizable(false);
         setJMenuBar(prepareViewMenu());
-        add(prepareViewBoard());
+    }
+
+    private void prepareController(){
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        this.addWindowListener(new WindowAdapter(){
+            @Override
+            public void windowClosing(WindowEvent e){
+                exitAction();
+            }
+        }
+        );
+
+        prepareControllerMenu();
+
+    }
+
+    private void exitAction(){
+        int selection = JOptionPane.showConfirmDialog(this, "¿Quieres salir?", "Salir", JOptionPane.YES_NO_OPTION);
+        if(selection ==  JOptionPane.YES_OPTION){
+            System.exit(0);
+        }
     }
 
     private JMenuBar prepareViewMenu(){
@@ -469,9 +489,6 @@ public class HungrySnakeGUI extends JFrame{
         JFileChooser chooser = new JFileChooser();
         chooser.showOpenDialog(this);
         File archivo = chooser.getSelectedFile();
-        if(archivo == null){
-            return;
-        }
         JOptionPane.showMessageDialog(this, "Acción en construcción:\n" +"Acción abrir\n"+"Nombre del archivo: "+ archivo.getName(), "Abrir", JOptionPane.INFORMATION_MESSAGE);
     }
 
@@ -479,9 +496,6 @@ public class HungrySnakeGUI extends JFrame{
         JFileChooser chooser = new JFileChooser();
         chooser.showSaveDialog(this);
         File archivo = chooser.getSelectedFile();
-        if(archivo == null){
-            return;
-        }
         JOptionPane.showMessageDialog(this, "Acción en construcción:\n" +"Acción salvar\n"+"Nombre del archivo: "+ archivo.getName(), "Salvar", JOptionPane.INFORMATION_MESSAGE);
     }
 
@@ -542,10 +556,7 @@ public class HungrySnakeGUI extends JFrame{
         HungrySnakeGUI gui = new HungrySnakeGUI();
         gui.setVisible(true);
     }
-
 }
-
-
 
 
 
