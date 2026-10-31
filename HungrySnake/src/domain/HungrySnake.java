@@ -2,12 +2,11 @@ package domain;
 import java.util.ArrayList;
 /**
  * Represents a HungrySnake
- * HungrySnake
  */
 public class HungrySnake{
     private char[][] board;
     private ArrayList<int[]> fruits;
-    private ArrayList<int[]> walls;
+    private ArrayList<int[]> obstacles;
     private ArrayList<int[]> snake;
     private char lastDirectionSnake;
     private int row;
@@ -30,8 +29,8 @@ public class HungrySnake{
         }
         board = new char[row][column];
         this.fruits = new ArrayList<>();
-        walls = new ArrayList<>();
-        snake = new ArrayList<>();
+        this.obstacles = new ArrayList<>();
+        this.snake = new ArrayList<>();
         this.row = row;
         this.column = column;
         
@@ -56,7 +55,7 @@ public class HungrySnake{
                 b = (int)(Math.random()*column);
             }
             board[a][b]='O';
-            walls.add(new int[]{a,b});
+            this.obstacles.add(new int[]{a,b});
         }
         
         
@@ -104,7 +103,7 @@ public class HungrySnake{
                     board[newY][newX] = 'H';
                     snake.add(0, new int[]{newY, newX});
                     lastDirectionSnake = 'N';
-                    if(size()+walls.size()<row*column){
+                    if(size()+obstacles.size()<row*column){
                         int a = (int)(Math.random()*row);
                         int b = (int)(Math.random()*column);
                         while(board[a][b] !='\u0000'){
@@ -142,7 +141,7 @@ public class HungrySnake{
                     board[newY][newX] = 'H';
                     snake.add(0, new int[]{newY, newX});
                     lastDirectionSnake = 'S';
-                    if(size()+walls.size()<row*column){
+                    if(size()+obstacles.size()<row*column){
                         int a = (int)(Math.random()*row);
                         int b = (int)(Math.random()*column);
                         while(board[a][b] !='\u0000'){
@@ -181,7 +180,7 @@ public class HungrySnake{
                     board[newY][newX] = 'H';
                     snake.add(0, new int[]{newY, newX});
                     lastDirectionSnake = 'E';
-                    if(size()+walls.size()<row*column){
+                    if(size()+obstacles.size()<row*column){
                         int a = (int)(Math.random()*row);
                         int b = (int)(Math.random()*column);
                         while(board[a][b] !='\u0000'){
@@ -219,7 +218,7 @@ public class HungrySnake{
                     board[newY][newX] = 'H';
                     snake.add(0, new int[]{newY, newX});
                     lastDirectionSnake = 'W';
-                    if(size()+walls.size()<row*column){
+                    if(size()+obstacles.size()<row*column){
                         int a = (int)(Math.random()*row);
                         int b = (int)(Math.random()*column);
                         while(board[a][b] !='\u0000'){
@@ -249,7 +248,7 @@ public class HungrySnake{
 
     /**
      * return the size of the arraylist snake
-     * @return snake.size()
+     * @return snake's size
      */
     public int size(){
         return snake.size();
