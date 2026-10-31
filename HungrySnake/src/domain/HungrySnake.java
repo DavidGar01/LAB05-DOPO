@@ -117,9 +117,12 @@ public class HungrySnake{
                 } else if (board[newY][newX] == '\u0000') {
                     int[] tempTail = snake.remove(size() - 1);
                     board[tempTail[0]][tempTail[1]] = '\u0000';
-
-                    board[newY][newX] = 'H';
                     snake.add(0, new int[]{newY, newX});
+                    if(size() > 1){
+                        board[posYHead][posXHead] = 'S';
+                    }
+                    board[newY][newX] = 'H';
+                    
                     lastDirectionSnake = 'N';
                 } else {
                     isOk = false;
@@ -156,9 +159,12 @@ public class HungrySnake{
                 } else if (board[newY][newX] == '\u0000') {
                     int[] tempTail = snake.remove(size() - 1);
                     board[tempTail[0]][tempTail[1]] = '\u0000';
-
-                    board[newY][newX] = 'H';
                     snake.add(0, new int[]{newY, newX});
+                    if(size() > 1){
+                        board[posYHead][posXHead] = 'S';
+                    }
+                    board[newY][newX] = 'H';
+                
                     lastDirectionSnake = 'S';
                 } else {
                     isOk = false;
@@ -194,9 +200,12 @@ public class HungrySnake{
                 } else if (board[newY][newX] == '\u0000') {
                     int[] tempTail = snake.remove(size() - 1);
                     board[tempTail[0]][tempTail[1]] = '\u0000';
-
-                    board[newY][newX] = 'H';
                     snake.add(0, new int[]{newY, newX});
+                    if(size() > 1){
+                        board[posYHead][posXHead] = 'S';
+                    }
+                    board[newY][newX] = 'H';
+                    
                     lastDirectionSnake = 'E';
                 } else {
                     isOk = false;
@@ -232,9 +241,11 @@ public class HungrySnake{
                 } else if (board[newY][newX] == '\u0000') {
                     int[] tempTail = snake.remove(size() - 1);
                     board[tempTail[0]][tempTail[1]] = '\u0000';
-
-                    board[newY][newX] = 'H';
                     snake.add(0, new int[]{newY, newX});
+                    if(size() > 1){
+                        board[posYHead][posXHead] = 'S';
+                    }
+                    board[newY][newX] = 'H';
                     lastDirectionSnake = 'W';
                 } else {
                     isOk = false;

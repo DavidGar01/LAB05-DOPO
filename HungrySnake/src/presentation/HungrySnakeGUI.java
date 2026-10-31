@@ -308,21 +308,40 @@ public class HungrySnakeGUI extends JFrame{
                 startGameAction();
             }
         });
-        game.setFocusable(true);
         game.addKeyListener(new KeyAdapter(){
             @Override
             public void keyPressed(KeyEvent e){
                 if(e.getKeyCode() == KeyEvent.VK_RIGHT){
+                    moveAction('E');
                 }
                 else if (e.getKeyCode() == KeyEvent.VK_LEFT){
+                    moveAction('W');
                 }
                 else if (e.getKeyCode() == KeyEvent.VK_UP){
+                    moveAction('N');
                 }
                 else if (e.getKeyCode() == KeyEvent.VK_DOWN){
+                    moveAction('S');
                 }
             }
 
         });
+    }
+
+    private void moveAction(char direction){
+        try {
+            if(!hungrySnake.move(direction)){
+                JOptionPane.showMessageDialog(this, "¡Se acabó el juego!", "Fin", JOptionPane.INFORMATION_MESSAGE);
+                game.setFocusable(false);
+            }
+            else{
+                refresh();
+            }
+            
+            
+        } catch (HungrySnakeException e) {
+            JOptionPane.showMessageDialog(this, "Ha ocurrido un error: "+ e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void exitAction(){
@@ -333,6 +352,7 @@ public class HungrySnakeGUI extends JFrame{
     }
 
     private void startGameAction(){
+        
         String newFruitsNumber = JOptionPane.showInputDialog(this, "Dame la cantidad de frutas que va a tener: ");
         if(newFruitsNumber != null){
             try{
@@ -357,7 +377,12 @@ public class HungrySnakeGUI extends JFrame{
         else{
             obstaclesNumber = 2.0;
         }
-
+        try{
+            hungrySnake = new HungrySnake(rows, columns, fruitsNumber, obstaclesNumber);
+        }
+        catch(HungrySnakeException e){
+            JOptionPane.showMessageDialog(this, "Ha ocurrido un error: " + e.getMessage(), "Error",JOptionPane.ERROR_MESSAGE );
+        };
         refresh();
     }
 
@@ -400,6 +425,7 @@ public class HungrySnakeGUI extends JFrame{
 
         game.revalidate();
         game.repaint();
+        game.setFocusable(true);
     }
 
     private void paintPanelComponents(char c, int row, int column){
