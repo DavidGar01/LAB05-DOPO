@@ -106,17 +106,17 @@ public class HungrySnakeGUI extends JFrame{
 
         length = new JLabel("1", JLabel.CENTER);
         length.setFont(new Font("Arial", Font.BOLD, 32));
-        length.setForeground(Color.WHITE);
+        length.setForeground(snakeColor);
 
         JLabel snakeLength = new JLabel("Tamaño serpiente:", JLabel.CENTER);
-        snakeLength.setFont(new Font("Arial", Font.BOLD, PREFERRED_DIMENSION.width/50));
+        snakeLength.setFont(new Font("Arial", Font.BOLD, PREFERRED_DIMENSION.width/55));
 
         JLabel fruitsInformation = new JLabel("Cantidad de frutas:", JLabel.CENTER);
-        fruitsInformation.setFont(new Font("Arial", Font.BOLD, PREFERRED_DIMENSION.width/50));
+        fruitsInformation.setFont(new Font("Arial", Font.BOLD, PREFERRED_DIMENSION.width/55));
 
         fruits = new JLabel(String.valueOf(fruitsNumber), JLabel.CENTER);
         fruits.setFont(new Font("Arial", Font.BOLD, 32));
-        fruits.setForeground(Color.WHITE);
+        fruits.setForeground(fruitsColor);
 
         for(int i = 0; i < 7; i++){
             if(i==1){
@@ -218,14 +218,14 @@ public class HungrySnakeGUI extends JFrame{
         
         obstacles = new JLabel(String.valueOf(obstaclesNumber)+"%", JLabel.CENTER);
         obstacles.setFont(new Font("Arial", Font.BOLD, 32));
-        obstacles.setForeground(Color.WHITE);
+        obstacles.setForeground(obstaclesColor);
         steps = new JLabel(String.valueOf(stepsNumber), JLabel.CENTER);
         steps.setFont(new Font("Arial", Font.BOLD, 32));
         steps.setForeground(Color.WHITE);
         JLabel wallsInformation = new JLabel("Porcentaje de Obstaculos:", JLabel.CENTER);
-        wallsInformation.setFont(new Font("Arial", Font.BOLD, PREFERRED_DIMENSION.width/50));
+        wallsInformation.setFont(new Font("Arial", Font.BOLD, PREFERRED_DIMENSION.width/55));
         JLabel stepsInformation = new JLabel("Cantidad de pasos:", JLabel.CENTER);
-        stepsInformation.setFont(new Font("Arial", Font.BOLD, PREFERRED_DIMENSION.width/50));
+        stepsInformation.setFont(new Font("Arial", Font.BOLD, PREFERRED_DIMENSION.width/55));
 
 
         for(int i = 0; i < 7; i++){
@@ -334,8 +334,6 @@ public class HungrySnakeGUI extends JFrame{
             obstaclesNumber = 2.0;
         }
 
-        game.removeAll();
-        prepareGame();
         refresh();
     }
 
@@ -359,7 +357,9 @@ public class HungrySnakeGUI extends JFrame{
     }
     
     private void refresh(){
-        
+        game.removeAll();
+        prepareGame();
+
         int[] snakePosition = new int[]{3,3};
         int[] obstacle1Position = new int[]{12,2};
         int[] obstacle2Position = new int[]{5,5};
@@ -380,7 +380,7 @@ public class HungrySnakeGUI extends JFrame{
 
     private void paintPanelComponents(char c, int row, int column){
         JPanel panel = new JPanel();
-        //Wall
+        //Obstacle
         if(c == 'O'){
             panel.setBackground(obstaclesColor);
         }
@@ -397,10 +397,10 @@ public class HungrySnakeGUI extends JFrame{
                 }
             };
             if((row+column)%2 == 0){
-                panel.setBackground(new Color(162,208,73));
+                panel.setBackground(firstFloorColor);
              }
             else{
-                panel.setBackground(new Color(169,215,81));
+                panel.setBackground(secondFloorColor);
                 }
         }
         //SnakeBody
@@ -499,7 +499,7 @@ public class HungrySnakeGUI extends JFrame{
                     boolean isIn = false;
                     
                     if(allColors.contains(color1)){
-                        JOptionPane.showMessageDialog(this, "Este color ya se esta en uso", "Color", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(this, "Este color ya está en uso", "Color", JOptionPane.ERROR_MESSAGE);
                         isIn = true;
                     }
                     
@@ -508,25 +508,24 @@ public class HungrySnakeGUI extends JFrame{
                         
                         if (opcion == 0){
                             fruitsColor = color1;
-                            refresh();
+                            fruits.setForeground(fruitsColor);
                         }
                         else if(opcion == 1){
                             snakeColor = color1;
-                            refresh();
+                            length.setForeground(snakeColor);
                         }
                         else if(opcion == 2) {
                             obstaclesColor = color1;
-                            refresh();
+                            obstacles.setForeground(obstaclesColor);
                         }
                         else if(opcion == 3){
                             firstFloorColor = color1;
-                            refresh();
 
                         }else{
                             secondFloorColor = color1;
-                            refresh();
 
                         }
+                        refresh();
                     }
                     
         }
