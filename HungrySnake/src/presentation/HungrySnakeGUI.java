@@ -1,6 +1,6 @@
-
-
 package presentation;
+import domain.HungrySnake;
+
 import javax.swing.*;
 import java.awt.event.*;
 import java.io.File;
@@ -16,6 +16,9 @@ public class HungrySnakeGUI extends JFrame{
     //JFrame size
     private static final Dimension PREFERRED_DIMENSION = new Dimension (Toolkit.getDefaultToolkit().getScreenSize().width/2, Toolkit.getDefaultToolkit().getScreenSize().height/2);
     //For JPanelArea there's less 16px for width and there's less 64px for the height 
+
+    //Model
+    private HungrySnake hungrySnake;
 
     //Menu items
     private JMenuItem nuevo;
@@ -53,6 +56,7 @@ public class HungrySnakeGUI extends JFrame{
 
     public HungrySnakeGUI(){
         setTitle("HungrySnake");
+        hungrySnake = new HungrySnake(rows, columns, fruitsNumber, obstaclesNumber);
         prepareView();
         prepareController();
     }
@@ -299,6 +303,25 @@ public class HungrySnakeGUI extends JFrame{
                 startGameAction();
             }
         });
+        game.setFocusable(true);
+        game.addKeyListener(new KeyAdapter(){
+            @Override
+            public void keyPressed(KeyEvent e){
+                if(e.getKeyCode() == KeyEvent.VK_RIGHT){
+                    hungrySnake.move('E');
+                }
+                else if (e.getKeyCode() == KeyEvent.VK_LEFT){
+                    hungrySnake.move('W');
+                }
+                else if (e.getKeyCode() == KeyEvent.VK_UP){
+                    hungrySnake.move('N');
+                }
+                else if (e.getKeyCode() == KeyEvent.VK_DOWN){
+                    hungrySnake.move('S');
+                }
+            }
+
+        });
     }
 
     private void exitAction(){
@@ -360,16 +383,16 @@ public class HungrySnakeGUI extends JFrame{
         game.removeAll();
         prepareGame();
 
-        int[] snakePosition = new int[]{3,3};
-        int[] obstacle1Position = new int[]{12,2};
-        int[] obstacle2Position = new int[]{5,5};
-        int[] fruitPosition = new int[]{10,8};
+        char[][] board = hungrySnake.board();
+        
+        for(int i = 0; i < board.length; i++){
+            for(int j = 0; board[0].length; j++){
+                paintPanelComponets(board[i][j], i,j);
+            }
+        }
 
-        paintPanelComponents('H',snakePosition[0], snakePosition[1] );
-        paintPanelComponents('O',obstacle1Position[0], obstacle1Position[1] );
-        paintPanelComponents('O',obstacle2Position[0], obstacle2Position[1] );
-        paintPanelComponents('F',fruitPosition[0], fruitPosition[1] );
-
+        stepsNumber++;
+        
         obstacles.setText(String.valueOf(obstaclesNumber)+"%");
         steps.setText(String.valueOf(stepsNumber));
         fruits.setText(String.valueOf(fruitsNumber));
