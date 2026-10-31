@@ -427,18 +427,20 @@ public class HungrySnakeGUI extends JFrame{
                 fruitsNumber = Integer.parseInt(newFruitsNumber);
             }
             catch(NumberFormatException e){
+                fruitsNumber = 1;
                 JOptionPane.showMessageDialog(this, "El texto no es un número válido." + "\n"+"Se pondrá por defecto 1", "No es un número válido", JOptionPane.ERROR_MESSAGE);
             }
         }
         else{
             fruitsNumber = 1;
         }
-        String newWallsNumber = JOptionPane.showInputDialog(this, "Dame el porcentaje de obstáculos que va a tener: ");
-        if(newWallsNumber != null){
+        String newObstaclesNumber = JOptionPane.showInputDialog(this, "Dame el porcentaje de obstáculos que va a tener: ");
+        if(newObstaclesNumber != null){
             try{
-                obstaclesNumber = Double.parseDouble(newWallsNumber);
+                obstaclesNumber = Double.parseDouble(newObstaclesNumber);
             }
             catch(NumberFormatException e){
+                obstaclesNumber = 2.0;
                 JOptionPane.showMessageDialog(this, "El texto no es un número válido."+ "\n"+"Se pondrá por defecto 2%", "No es un número válido", JOptionPane.ERROR_MESSAGE);
             }
         }
@@ -451,6 +453,7 @@ public class HungrySnakeGUI extends JFrame{
                 rows = Integer.parseInt(newRows);
             }
             catch(NumberFormatException e){
+                rows = 25;
                 JOptionPane.showMessageDialog(this, "El texto no es un número válido."+ "\n"+"Se pondrá por defecto 25", "No es un número válido", JOptionPane.ERROR_MESSAGE);
             }
         }
@@ -463,30 +466,31 @@ public class HungrySnakeGUI extends JFrame{
                 columns = Integer.parseInt(newColumns);
             }
             catch(NumberFormatException e){
+                columns = 25;
                 JOptionPane.showMessageDialog(this, "El texto no es un número válido."+ "\n"+"Se pondrá por defecto 25", "No es un número válido", JOptionPane.ERROR_MESSAGE);
             }
         }
         else{
             columns = 25;
         }
-            try{
-              hungrySnake = new HungrySnake(rows, columns, fruitsNumber, obstaclesNumber);
-              snakeColor = colorBeforeDeath;
-              length.setForeground(snakeColor);
-              ended = false;
-             }
-            catch(HungrySnakeException e){
-                JOptionPane.showMessageDialog(this, "Ha ocurrido un error: " + e.getMessage(), "Error",JOptionPane.ERROR_MESSAGE );
-                startGameAction();
-           };
+        try{
+            hungrySnake = new HungrySnake(rows, columns, fruitsNumber, obstaclesNumber);
+            snakeColor = colorBeforeDeath;
+            length.setForeground(snakeColor);
+            ended = false;
+        }
+        catch(HungrySnakeException e){
+            JOptionPane.showMessageDialog(this, "Ha ocurrido un error: " + e.getMessage(), "Error",JOptionPane.ERROR_MESSAGE );
+            startGameAction();
+        };
         lastDirection = 'E';
         
         JOptionPane.showMessageDialog(this, "Mueve la serpiente con las flechas del teclado, intenta comer la mayor cantidad de frutas en el menor número de pasos sin estrellarte.", "Indicaciones", JOptionPane.INFORMATION_MESSAGE);
 
-
+        game.removeAll();
         game.setFocusable(true);
         game.requestFocusInWindow();
-        game.removeAll();
+       
         prepareGame();
         refresh();
     }

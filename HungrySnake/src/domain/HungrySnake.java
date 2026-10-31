@@ -106,8 +106,13 @@ public class HungrySnake{
                     board[newY][newX] = 'H';
                     snake.add(0, new int[]{newY, newX});
                     lastDirectionSnake = 'N';
-                    fruits.remove(new int[]{newY, newX});
-                    if(size()+obstacles.size()<row*column){
+                    for(int i = 0; i<fruits.size();i++){
+                        if(fruits.get(i)[0] == newY && fruits.get(i)[1] == newX){
+                            fruits.remove(i);
+                            break;
+                        }
+                    }
+                    if(size()+obstacles.size()+ fruits.size()<row*column){
                         int a = (int)(Math.random()*row);
                         int b = (int)(Math.random()*column);
                         while(board[a][b] !='\u0000'){
@@ -116,7 +121,8 @@ public class HungrySnake{
                         }
                         board[a][b]='F';
                         fruits.add(new int[]{a,b});
-                    }else{
+                    }
+                    if(fruits.isEmpty()){
                         throw new HungrySnakeException(HungrySnakeException.WIN);
                     }
                 } else if (board[newY][newX] == '\u0000') {
@@ -149,8 +155,13 @@ public class HungrySnake{
                     board[newY][newX] = 'H';
                     snake.add(0, new int[]{newY, newX});
                     lastDirectionSnake = 'S';
-                    fruits.remove(new int[]{newY, newX});
-                    if(size()+obstacles.size()<row*column){
+                    for(int i = 0; i<fruits.size();i++){
+                        if(fruits.get(i)[0] == newY && fruits.get(i)[1] == newX){
+                            fruits.remove(i);
+                            break;
+                        }
+                    }
+                    if(size()+obstacles.size()+ fruits.size()<row*column){
                         int a = (int)(Math.random()*row);
                         int b = (int)(Math.random()*column);
                         while(board[a][b] !='\u0000'){
@@ -159,7 +170,8 @@ public class HungrySnake{
                         }
                         board[a][b]='F';
                         fruits.add(new int[]{a,b});
-                    }else{
+                    }
+                    if(fruits.isEmpty()){
                         throw new HungrySnakeException(HungrySnakeException.WIN);
                     }
 
@@ -193,8 +205,13 @@ public class HungrySnake{
                     board[newY][newX] = 'H';
                     snake.add(0, new int[]{newY, newX});
                     lastDirectionSnake = 'E';
-                    fruits.remove(new int[]{newY, newX});
-                    if(size()+obstacles.size()<row*column){
+                    for(int i = 0; i<fruits.size();i++){
+                        if(fruits.get(i)[0] == newY && fruits.get(i)[1] == newX){
+                            fruits.remove(i);
+                            break;
+                        }
+                    }
+                    if(size()+obstacles.size()+ fruits.size()<row*column){
                         int a = (int)(Math.random()*row);
                         int b = (int)(Math.random()*column);
                         while(board[a][b] !='\u0000'){
@@ -204,7 +221,8 @@ public class HungrySnake{
                         board[a][b]='F';
                         
                         fruits.add(new int[]{a,b});
-                    }else{
+                    }
+                    if(fruits.isEmpty()){
                         throw new HungrySnakeException(HungrySnakeException.WIN);
                     }
                 } else if (board[newY][newX] == '\u0000') {
@@ -237,8 +255,13 @@ public class HungrySnake{
                     board[newY][newX] = 'H';
                     snake.add(0, new int[]{newY, newX});
                     lastDirectionSnake = 'W';
-                    fruits.remove(new int[]{newY, newX});
-                    if(size()+obstacles.size()<row*column){
+                    for(int i = 0; i<fruits.size();i++){
+                        if(fruits.get(i)[0] == newY && fruits.get(i)[1] == newX){
+                            fruits.remove(i);
+                            break;
+                        }
+                    }
+                    if(size()+obstacles.size()+ fruits.size()<row*column){
                         int a = (int)(Math.random()*row);
                         int b = (int)(Math.random()*column);
                         while(board[a][b] !='\u0000'){
@@ -248,7 +271,8 @@ public class HungrySnake{
                         board[a][b]='F';
                         
                         fruits.add(new int[]{a,b});
-                    }else{
+                    }
+                    if(fruits.isEmpty()){
                         throw new HungrySnakeException(HungrySnakeException.WIN);
                     }
                 } else if (board[newY][newX] == '\u0000') {
