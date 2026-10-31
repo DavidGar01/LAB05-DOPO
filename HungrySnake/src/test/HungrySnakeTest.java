@@ -419,4 +419,18 @@ public class HungrySnakeTest {
             assertEquals(HungrySnakeException.LAST_DIRECTION, e.getMessage());
         }
     }
+    /**
+     * Boards shouldn't be bigger than 50x50, includes you shouldn't put more than 50 rows or more than 50 columns
+     */
+    @Test
+    public void shouldNotMakeMapsSoBig(){
+        try{
+            HungrySnake game = new HungrySnake(51,51,0,0);
+            fail("Didn't throw an exception");
+        }
+        catch(HungrySnakeException e){
+            assertEquals(e.getMessage(), HungrySnakeException.BOARD_TOO_BIG);
+        }
+    }
+
 }

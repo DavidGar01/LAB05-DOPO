@@ -443,6 +443,30 @@ public class HungrySnakeGUI extends JFrame{
         else{
             obstaclesNumber = 2.0;
         }
+        String newRows = JOptionPane.showInputDialog(this, "Dame la cantidad de filas del mapa: ");
+        if(newRows != null){
+            try{
+                rows = Integer.parseInt(newRows);
+            }
+            catch(NumberFormatException e){
+                JOptionPane.showMessageDialog(this, "El texto no es un número válido."+ "\n"+"Se pondrá por defecto 25", "No es un número válido", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        else{
+            rows = 25;
+        }
+        String newColumns = JOptionPane.showInputDialog(this, "Dame la cantidad de columnas del mapa: ");
+        if(newColumns != null){
+            try{
+                columns = Integer.parseInt(newColumns);
+            }
+            catch(NumberFormatException e){
+                JOptionPane.showMessageDialog(this, "El texto no es un número válido."+ "\n"+"Se pondrá por defecto 25", "No es un número válido", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        else{
+            columns = 25;
+        }
             try{
               hungrySnake = new HungrySnake(rows, columns, fruitsNumber, obstaclesNumber);
               snakeColor = colorBeforeDeath;
@@ -454,6 +478,9 @@ public class HungrySnakeGUI extends JFrame{
                 startGameAction();
            };
         lastDirection = 'E';
+        
+        JOptionPane.showMessageDialog(this, "Mueve la serpiente con las flechas del teclado, intenta comer la mayor cantidad de frutas en el menor número de pasos sin estrellarte.", "Indicaciones", JOptionPane.INFORMATION_MESSAGE);
+
 
         game.setFocusable(true);
         game.requestFocusInWindow();
@@ -463,13 +490,18 @@ public class HungrySnakeGUI extends JFrame{
     }
 
     private void prepareGame(){
-        game.setLayout(new GridLayout(rows, columns));
-        board = new JPanel[rows][columns];
+        int maxSize = Math.max(rows, columns);
+        game.setLayout(new GridLayout(maxSize, maxSize)); 
+        board = new JPanel[maxSize][maxSize];
+        
 
-        for(int i = 0; i < rows; i++){
-            for(int j = 0; j < columns; j++){
+        for(int i = 0; i < maxSize; i++){
+            for(int j = 0; j < maxSize; j++){
                 board[i][j] = new JPanel();
-                if((i+j)%2 == 0){
+                if(i>=rows || j >=columns){
+                    board[i][j].setBackground(new Color(161, 130,98));
+                }
+                else if((i+j)%2 == 0){
                     board[i][j].setBackground(firstFloorColor);
                 }
                 else{
@@ -484,12 +516,13 @@ public class HungrySnakeGUI extends JFrame{
     private void refresh(){
         char[][] gameBoard = hungrySnake.board();
         
-        for(int i = 0; i < gameBoard.length; i++){
-            for(int j = 0;j< gameBoard[0].length; j++){
+        for(int i = 0; i < rows; i++){
+            for(int j = 0;j< columns; j++){
                 board[i][j].removeAll();
                 paintPanelComponents(gameBoard[i][j], i,j);
             }
         }
+        
 
         
         obstacles.setText(String.valueOf(obstaclesNumber)+"%");
@@ -618,6 +651,9 @@ public class HungrySnakeGUI extends JFrame{
             };
         }
         else{
+            if(row>=rows || column >=columns){
+                    panel.setBackground(new Color(161, 130,98));
+                }
             if((row + column)%2 == 0){
                 panel.setBackground(firstFloorColor);
             }

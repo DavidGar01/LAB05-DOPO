@@ -24,6 +24,9 @@ public class HungrySnake{
         if(row<=0 || column <=0 || fruits<0 || obstacles<0){
             throw new HungrySnakeException(HungrySnakeException.NEGATIVE_NUMBERS);
         }
+        if(row>50 || column >50){
+            throw new HungrySnakeException(HungrySnakeException.BOARD_TOO_BIG);
+        }
         if((row*column)<= (fruits + ((row*column) * obstacles/100))){
             throw new HungrySnakeException(HungrySnakeException.CANT_PUT_A_SNAKE);
         }
